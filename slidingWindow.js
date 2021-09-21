@@ -53,50 +53,99 @@
 
 // console.log(longestSubstring("araaci", 2)); // 4
 
-const smallestSubarray = (s, arr) => {
-  let currentWindowValue = 0; // 2
-  let currentWindowLength = Infinity; // 1
-  let windowStart = 0;
+// const smallestSubarray = (s, arr) => {
+//   let currentWindowValue = 0; // 2
+//   let currentWindowLength = Infinity; // 1
+//   let windowStart = 0;
 
-  for (let windowEnd = 0; windowEnd < arr.length; windowEnd++) {
-    currentWindowValue += arr[windowEnd];
+//   for (let windowEnd = 0; windowEnd < arr.length; windowEnd++) {
+//     currentWindowValue += arr[windowEnd];
 
-    while (currentWindowValue >= s) {
-      currentWindowLength = Math.min(
-        currentWindowLength,
-        windowEnd - windowStart + 1
-      );
-      currentWindowValue -= arr[windowStart];
-      windowStart++;
+//     while (currentWindowValue >= s) {
+//       currentWindowLength = Math.min(
+//         currentWindowLength,
+//         windowEnd - windowStart + 1
+//       );
+//       currentWindowValue -= arr[windowStart];
+//       windowStart++;
+//     }
+//   }
+//   if (currentWindowLength === Infinity) {
+//     return 0;
+//   }
+//   return currentWindowLength;
+// };
+
+// console.log("small", smallestSubarray(7, [2, 1, 5, 2, 8]));
+// // console.log("small", smallestSubarray(8, [3, 4, 1, 1, 6]));
+// // console.log(smallestSubarray());
+
+// const correctSmallestSubarray = (s, arr) => {
+//   let windowSum = 0,
+//     minLength = Infinity,
+//     windowStart = 0;
+
+//   for (windowEnd = 0; windowEnd < arr.length; windowEnd++) {
+//     windowSum += arr[windowEnd]; // add the next element
+//     // shrink the window as small as possible until the 'window_sum' is smaller than 's'
+//     while (windowSum >= s) {
+//       minLength = Math.min(minLength, windowEnd - windowStart + 1);
+//       windowSum -= arr[windowStart];
+//       windowStart += 1;
+//     }
+//   }
+
+//   if (minLength === Infinity) {
+//     return 0;
+//   }
+//   return minLength;
+// };
+
+function stringPermutation(str, pattern) {
+  const patternObj = {};
+  for (let letter of pattern) {
+    patternObj[letter] ? patternObj[letter]++ : (patternObj[letter] = 1); // make pattern object
+  }
+  console.log("pattern", patternObj);
+
+  let strStart = 0; //start of sliding window
+  let strObj = {}; //obj to hold frequencies in str
+
+  for (let strEnd = 0; strEnd < str.length; strEnd++) {
+    //counting frequencies
+    const right = str[strEnd];
+    if (!(right in strObj)) {
+      strObj[right] = 0;
+    }
+    strObj[right]++;
+
+    while (Object.values(strObj).reduce((a, b) => a + b, 0) > pattern.length) {
+      // if our string object has more than pattern.length amount of values  slide left side of window
+      const left = str[strStart];
+      strObj[left]--;
+      if (strObj[left] === 0) {
+        delete strObj[left];
+      }
+      console.log(strObj);
+      strStart++;
+
+      if (
+        // comparing the 2 objects THIS IS BROKEN
+        Object.keys(patternObj).every(
+          (key) => strObj.hasOwnProperty(key) && strObj[key] === patternObj[key]
+        )
+      ) {
+        return true;
+      }
     }
   }
-  if (currentWindowLength === Infinity) {
-    return 0;
-  }
-  return currentWindowLength;
-};
 
-console.log("small", smallestSubarray(7, [2, 1, 5, 2, 8]));
-// console.log("small", smallestSubarray(8, [3, 4, 1, 1, 6]));
-// console.log(smallestSubarray());
+  console.log("str", strObj);
+  return false;
+}
 
-const correctSmallestSubarray = (s, arr) => {
-  let windowSum = 0,
-    minLength = Infinity,
-    windowStart = 0;
-
-  for (windowEnd = 0; windowEnd < arr.length; windowEnd++) {
-    windowSum += arr[windowEnd]; // add the next element
-    // shrink the window as small as possible until the 'window_sum' is smaller than 's'
-    while (windowSum >= s) {
-      minLength = Math.min(minLength, windowEnd - windowStart + 1);
-      windowSum -= arr[windowStart];
-      windowStart += 1;
-    }
-  }
-
-  if (minLength === Infinity) {
-    return 0;
-  }
-  return minLength;
-};
+//console.log(stringPermutation("oidbcaf", "abc"), "TRUE");
+//console.log(stringPermutation("odicf", "dc"), "FALSE");
+//console.log(stringPermutation("bcdyabcdx", "bcdxabcdy"), "TRUE");
+console.log(stringPermutation("aaacb", "abc"), "TRUE");
+//PROBLEM WITH OBJECT COMPARISON
