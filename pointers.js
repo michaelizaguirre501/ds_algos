@@ -28,7 +28,7 @@ function triplets(arr, targetSum) {
     let left = i + 1,
       right = arr.length - 1;
     while (left < right) {
-      const target_diff = targetSum - arr[i] - arr[left] - arr[right];
+      const target_diff = targetSum - arr[i] - arr[left] - arr[right]; //this
       if (target_diff === 0) {
         //found triplet with exact match
         return targetSum - target_diff;
@@ -39,7 +39,7 @@ function triplets(arr, targetSum) {
       }
       if (
         Math.abs(target_diff) < Math.abs(smallest_difference) || //saves smallest sum when we have more than one solution
-        (Math.abs(target_diff) === Math.abs(smallest_difference) &&
+        (Math.abs(target_diff) === Math.abs(smallest_difference) && //this
           target_diff > smallest_difference)
       ) {
         smallest_difference = target_diff;
